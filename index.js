@@ -21,12 +21,14 @@ const routes = {
 };
 
 const server = http.createServer(async (req, res) => {
+  const url = new URL(req.url, `http://${req.headers.host}`);
+
   if (req.method !== "GET") {
     res.writeHead(405, { "Content-Type": "text/plain" });
     return res.end("Method not allowed");
   }
 
-  const fileName = routes[req.url] || "404.html";
+  const fileName = routes[url.pathname] || "404.html";
   const data = await getFile(fileName);
 
   if (data) {
